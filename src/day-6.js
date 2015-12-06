@@ -23,7 +23,6 @@ function countLitLamps() {
                 switch (cmd.op) {
                     case 'turn on':
                         map[x][y] += 1;
-                        // console.log('lightup', cmd.op, x, y);
                         break;
 
                     case 'turn off':
