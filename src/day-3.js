@@ -1,56 +1,69 @@
+'use strict';
 
 process.stdin.setEncoding('utf8');
 
 var data = '';
 process.stdin.on('readable', function() {
-  data += process.stdin.read();
+    var chunk = process.stdin.read();
+    if (chunk !== null) {
+        data += chunk;
+    }
 });
 process.stdin.on('end', processCalc);
 
 
 function processCalc() {
+    var map = {};
+    map['0:0'] = 1;
+
+    // 1st case - all instructions
+    // santaAloneRoute(map, 0, 1);
+
+    // 2nd case - first santa, then robot
+    santaAloneRoute(map, 0, 2);
+    santaAloneRoute(map, 1, 2);
+
+    // drawMap(map);
+
+    console.log(
+        countUniqueHouses(map)
+    );
+}
+
+function santaAloneRoute(map, start, inc) {
     var x = 0;
     var y = 0;
-    var map = new Map();
-    map.set(`${x}:${y}`, 1);
-    var unique = 1;
 
-    for (var index = 0; index < data.length; index++) {
-        // console.log('==', index, data.charAt(index));
+    for (var index = start; index < data.length; index += inc) {
         switch (data.charAt(index)) {
             case '^': y++; break;
             case 'v': y--; break;
             case '<': x--; break;
             case '>': x++; break;
             default:
-                // console.error('unexpected char: ', data.charAt(index));
                 continue;
                 break;
         }
 
-        if (map.get(`${x}:${y}`) !== 1) {
-            unique += 1;
-            map.set(`${x}:${y}`, 1);
-        }
-
-        // console.log(data.charAt(index), x, y, unique);
+        map[`${x}:${y}`] = 1;
     }
+}
 
-    // console.log("\033[2J\033[0f")
+function countUniqueHouses(map) {
+    return Object.keys(map).length;
+}
 
-    // for (y = -100; y < 150; y ++) {
-    //     var str = "";
-    //     for (x = -100; x < 150; x++) {
-    //         if (map.get(`${x}:${y}`) === 1) {
-    //             str += 'x';
-    //         } else {
-    //             str += '-';
-    //         }
-    //     }
-    //     console.log(str);
-    // }
-
-    // console.log(map);
-    console.log(x, y);
-    console.log(unique);
+function drawMap() {
+    var x,y;
+    for (y = -100; y < 150; y ++) {
+        var str = "";
+        for (x = -100; x < 150; x++) {
+            if (map.get(`${x}:${y}`) === 1) {
+                str += 'x';
+            } else {
+                str += '-';
+            }
+        }
+        console.log(str);
+    }
 }

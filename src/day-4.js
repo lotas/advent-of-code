@@ -11,5 +11,9 @@ while (true) {
         break;
     }
     i++;
+
+    if (i % 1000000 === 0) {
+        console.log(i);
+    }
 }
 
